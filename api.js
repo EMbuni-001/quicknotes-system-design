@@ -3,6 +3,10 @@ const API_URL = 'https://jsonplaceholder.typicode.com/posts';
 const loadBtn = document.querySelector('#load-btn');
 const statusEl = document.querySelector('#status');
 const notesList = document.querySelector('#notes-list');
+const noteForm = document.querySelector('#note-form');
+const titleInput = document.querySelector('#title-input');
+const bodyInput = document.querySelector('#body-input');
+const submitBtn = document.querySelector('#submit-btn');
 
 let notes = []; 
 
@@ -11,8 +15,9 @@ function setStatus(message, type) {
     statusEl.className = `status-${type}`;
 }
 
-function toggleLoadButton(isDisabled) {
+function toggleButtons(isDisabled) {
     loadBtn.disabled = isDisabled;
+    submitBtn.disabled = isDisabled; 
 }
 
 async function request(url, options = {}) {
@@ -61,7 +66,7 @@ function renderNotes() {
 }
 
 async function loadNotes() {
-    toggleLoadButton(true);
+    toggleButtons(true); 
     setStatus('Loading notes...', 'loading');
     
     try {
@@ -72,11 +77,15 @@ async function loadNotes() {
     } catch (error) {
         setStatus('Failed to load notes. Please try again.', 'error');
     } finally {
-        toggleLoadButton(false);
+        toggleButtons(false); 
     }
 }
 
-// Remember the Event Listener
-loadBtn.addEventListener('click', loadNotes);
+async function createNote(event) {
+    event.preventDefault();
+    const title = titleInput.value.trim();
+    const body = bodyInput.value.trim();
 
-renderNotes();
+    if (!title) {
+        setStatus('Title is required.', 'error');
+        return;
