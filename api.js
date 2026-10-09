@@ -140,7 +140,6 @@ async function deleteNote(id, liElement) {
     try {
         await request(`${API_URL}/${id}`, { method: 'DELETE' });
         
-         */
         notes = notes.filter(note => note.id !== id);
         liElement.remove();
         
